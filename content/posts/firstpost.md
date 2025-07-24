@@ -3,6 +3,7 @@ date = '2025-07-23T19:31:45+05:30'
 draft = false 
 tags = ['Computer Graphics', 'Programming']
 title = 'Computer Graphics'
+cover = 'images/quake.png'
 ToC = false
 +++
 
