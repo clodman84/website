@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Monkey Business</title>
+    <link>//localhost:1313/</link>
+    <description>Recent content on Monkey Business</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 24 Jul 2025 11:36:59 +0530</lastBuildDate><atom:link href="//localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>My Tiny Renderer (1/?)</title>
+      <link>//localhost:1313/posts/mytinyrenderer/</link>
+      <pubDate>Thu, 24 Jul 2025 11:36:59 +0530</pubDate>
+      
+      <guid>//localhost:1313/posts/mytinyrenderer/</guid>
+      <description>&lt;h2 id=&#34;bresenham-line-drawing-algorithm&#34;&gt;Bresenham Line Drawing Algorithm&lt;/h2&gt;
+&lt;p&gt;![[Pasted image 20241231184039.png]]&lt;/p&gt;
+&lt;p&gt;The Bresenham algorithm is specifically designed to work on lines that go downwards (technically its still upwards its just that the way pixel indexing on displays work) with a slope less than 1. This may seem pretty limiting at first but we will extend this method to draw lines at any angle.&lt;/p&gt;
+&lt;h3 id=&#34;derivation&#34;&gt;Derivation&lt;/h3&gt;
+&lt;p&gt;![[Pasted image 20241231185348.png | 500]]&lt;/p&gt;
+&lt;p&gt;Lets start at \( (x_0, y_0) \) such that $f(x_0, y_0) = 0$ and since A, B and C are all integers in the line equation of our choice (they are calculated using start and end point using slopes and so on, you get the idea), so is $x_0$ and $y_0$ and is represented by the yellow dot. The intersection of the integral grid lines represent the pixels on the screen.&lt;/p&gt;</description>
+      <content>&lt;h2 id=&#34;bresenham-line-drawing-algorithm&#34;&gt;Bresenham Line Drawing Algorithm&lt;/h2&gt;
+&lt;p&gt;![[Pasted image 20241231184039.png]]&lt;/p&gt;
+&lt;p&gt;The Bresenham algorithm is specifically designed to work on lines that go downwards (technically its still upwards its just that the way pixel indexing on displays work) with a slope less than 1. This may seem pretty limiting at first but we will extend this method to draw lines at any angle.&lt;/p&gt;
+&lt;h3 id=&#34;derivation&#34;&gt;Derivation&lt;/h3&gt;
+&lt;p&gt;![[Pasted image 20241231185348.png | 500]]&lt;/p&gt;
+&lt;p&gt;Lets start at \( (x_0, y_0) \) such that $f(x_0, y_0) = 0$ and since A, B and C are all integers in the line equation of our choice (they are calculated using start and end point using slopes and so on, you get the idea), so is $x_0$ and $y_0$ and is represented by the yellow dot. The intersection of the integral grid lines represent the pixels on the screen.&lt;/p&gt;
+&lt;p&gt;We move to the right in discrete steps incrementing the value of x. Now we need to decide whether we should colour $(x_0 + 1, y_0)$ or $(x_0 + 1, y_0 + 1)$ we do not need to consider the 8 total vertices since we have limited our scope to lines going downwards with a slope less than 1, that is, it can ONLY be one of those two points.&lt;/p&gt;
+&lt;p&gt;Rather intuitively we should choose the point that is closest to line. To do this we evaluate the line at the midpoint of both the purple dots i.e $f(x_0+1, y_0 + \dfrac{1}{2})$&lt;/p&gt;
+&lt;p&gt;If this value is positive, then the midpoint lies above the ideal line and lower purple point $(x_0+1, y_0+1)$ is closer and vice versa.&lt;/p&gt;
+&lt;p&gt;We make the chosen purple point the yellow point and repeat.&lt;/p&gt;
+&lt;h3 id=&#34;algorithm-for-integer-arithmetic&#34;&gt;Algorithm for Integer Arithmetic&lt;/h3&gt;
+&lt;p&gt;Apart from the 1/2 in the step where we check if either point is closer to the ideal line or not, the entire algorithm presented above uses only integers, if we could come up with a way to get rid of that step to figure out which point is closer to the ideal we could use integer-only arithmetic which computers are significantly faster at.&lt;/p&gt;
+&lt;p&gt;Lets define a difference $D_i$ as follows
+&lt;/p&gt;
+$$
+\Delta D_i = f(x_i + 1, y_i + \frac12) - f(x_i, y_i)
+$$&lt;p&gt;
+Now for the first time we do this $f(x_0, y_0)$ is obviously going to be zero $D_0$ is nothing but the midpoint like we discussed above, and we proceed exactly like we did above as well. But for all subsequent decisions we need not compute the value of the line equation at the point.&lt;/p&gt;
+&lt;p&gt;If $(x_0 + 1, y_0)$ is chosen then the change in the value of $D_i$ when it becomes $D_{i+1}$ will be
+&lt;/p&gt;
+$$
+\Delta D = A[x_0 + 2] + B[y_0 + \frac12] + C - (A[x_0 + 1] + B[y_0 + \frac12] + C)
+$$&lt;p&gt;
+Which simplifies to A and similarly if we choose $(x_0 + 1, y_0+1)$ the change in D simplifies to A + B. We add this to the value of $D_i$ and check if it is positive or negative and proceed as usual.&lt;/p&gt;
+&lt;p&gt;Now A and B are known to be $\Delta y$ and $-\Delta x$ from the endpoints of the line since that is how we obtain our equation for the line. Moreover, the $\frac12$ in the value of $D_0$ isn&amp;rsquo;t an integer, but since we only care about the sign of the value of $D_i$ we can multiply the whole process with 2 and nothing will change.&lt;/p&gt;
+&lt;p&gt;We finally arrive at the following pseudo-code:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;plotLine(x0, y0, x1, y1)
+    dx = x1 - x0
+    dy = y1 - y0
+    D = 2*dy - dx
+    y = y0
+
+    for x from x0 to x1
+        plot(x, y)
+        if D &amp;gt; 0
+            y = y + 1
+            D = D - 2*dx
+        end if
+        D = D + 2*dy
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;but-what-is-d_i&#34;&gt;But what is $D_i$?&lt;/h4&gt;
+&lt;p&gt;$\Delta D_i$ is merely by how much the value of the midpoint calculation changes every time we move repeat this iteration, whereas the constant D itself refers to same evaluation at the midpoint operation that we did before to decide which point needs to be selected.&lt;/p&gt;
+&lt;p&gt;although later sections cover this it is fruitful to think about how this would change in the case where the slope is negative, i.e, we have to choose between the points $(x_0 + 1, y_0)$ and $(x_0 + 1, y_0 - 1)$ with the midpoint now being $(x_0+1, y_0 - \dfrac{1}{2})$. Giving us the following:
+&lt;/p&gt;
+$$
+\Delta D_i = f(x_i + 1, y_i - \frac12) - f(x_i, y_i)
+$$&lt;p&gt;
+If $(x_0 + 1, y_0)$ is chosen then the change in the value of $D_i$ when it becomes $D_{i+1}$ will be
+&lt;/p&gt;
+$$
+\Delta D = A[x_0 + 2] + B[y_0 - \frac12] + C - (A[x_0 + 1] + B[y_0 - \frac12] + C)
+$$&lt;p&gt;
+Which again evaluates to $\Delta y$&lt;/p&gt;
+&lt;p&gt;If $(x_0 + 1, y_0 -1)$ is chosen (when D &amp;gt; 0) then the change in the value of $D_i$ when it becomes $D_{i+1}$ will be
+&lt;/p&gt;
+$$
+\Delta D = A[x_0 + 2] + B[y_0 - \frac32] + C - (A[x_0 + 1] + B[y_0 - \frac12] + C)
+$$&lt;p&gt;
+Which evaluates to $-\Delta y - \Delta x$&lt;/p&gt;
+&lt;h3 id=&#34;extending-it-to-any-angle&#34;&gt;Extending it to any angle&lt;/h3&gt;
+&lt;p&gt;![[Pasted image 20250101152019.png]]
+Right now the algorithm only works in octant 1 (the diagram is using regular coordinates instead of the upside coordinate system on screens)&lt;/p&gt;
+&lt;p&gt;Lets consider the case where the slope is $&amp;gt;1$ the algorithm is identical if we iterate over y instead of iterating over x, and we also need to change the second point of consideration from $(x_0 + 1, y_0)$ to $(x_0, y_0 + 1)$. Moreover the midpoint of the two points we have to choose from changes to $(x_0 + \frac12, y_0+1)$. All of these changes are immediately handled if we just swap the variables $x_0$ and $y_0$ and $x_1$ and $y_1$ and plot y, x instead of x, y since the variables are now inverted. Don&amp;rsquo;t take my word for it, try it and see.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;plotLine(x0, y0, x1, y1)
+	steep = false
+	if abs(y1 - y0) &amp;gt; abs(x1 - x0):
+		swap(x0, y0)
+		swap(x1, y1)
+		steep = true
+    dx = x1 - x0
+    dy = y1 - y0
+    D = 2*dy - dx
+    y = y0
+
+    for x from x0 to x1
+        plot(x, y)
+        if D &amp;gt; 0
+            y = y + 1
+            D = D - 2*dx
+        end if
+        D = D + 2*dy
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;![[Pasted image 20250101160933.png]]
+Now we have octant 1 and 2 done, what about octant 5 and 6. The above diagram shows us whats different between the two quadrants. Notice that the only difference in octant 5 and 6 is the direction in which our lines are being drawn, if we just swap the points whenever $x_0 &amp;gt; x_1$ we get what we are looking for. Should we be doing this after or before the swap in case the slope is greater than 1? We should be doing this after we decide to swap variables for greater slopes. Because what we are doing right now is changing the order of the variables we are meant to be looping over, and the the swap for the loops is deciding &lt;em&gt;which&lt;/em&gt; variable &lt;em&gt;x or y&lt;/em&gt; we need to be looping over.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;plotLine(x0, y0, x1, y1)
+	steep = false
+	if abs(y1 - y0) &amp;gt; abs(x1 - x0):
+		swap(x0, y0)
+		swap(x1, y1)
+		steep = true
+	if x0 &amp;gt; x1:
+		swap(x0, x1)
+		swap(y0, y1)
+    dx = x1 - x0
+    dy = y1 - y0
+    D = 2*dy - dx
+    y = y0
+
+    for x from x0 to x1
+        plot(x, y)
+        if D &amp;gt; 0
+            y = y + 1
+            D = D - 2*dx
+        end if
+        D = D + 2*dy
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;What about cases when the slope is negative, which is what happens in octants 7 and 8? Going back to diagram with yellow and green dots this refers to the case where the line is sloping upwards and we now have to choose between the points $(x_0 + 1, y_0)$ and $(x_0 + 1, y_0 - 1)$ with the midpoint now being $(x_0+1, y_0 - \dfrac{1}{2})$ the difference function changes and if the value evaluated at this point is positive then we choose $(x_0 + 1, y_0 - 1)$. This can be fixed if we decrease the value of y instead of increase it and change the dy we use in the Difference equation to -dy.&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;plotLine(x0, y0, x1, y1)
+	steep = false
+	if abs(y1 - y0) &amp;gt; abs(x1 - x0):
+		swap(x0, y0)
+		swap(x1, y1)
+		steep = true
+	if x0 &amp;gt; x1:
+		swap(x0, x1)
+		swap(y0, y1)
+    dx = x1 - x0
+    dy = y1 - y0
+    yi = 1
+    if dy &amp;lt; 0:
+	    yi = -1
+	    dy = -dy
+    D = 2*dy - dx
+    y = y0
+    
+    for x from x0 to x1
+        plot(x, y)
+        if D &amp;gt; 0
+            y = y + 1
+            D = D - 2*dx
+        end if
+        D = D + 2*dy
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The changes that we made to plot octants 5 and 6 still apply as its a valid operation for the entire left half of the plane and by making these changes octants 3 and 4 get covered on their own with no further changes.&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Computer Graphics</title>
+      <link>//localhost:1313/posts/firstpost/</link>
+      <pubDate>Wed, 23 Jul 2025 19:31:45 +0530</pubDate>
+      
+      <guid>//localhost:1313/posts/firstpost/</guid>
+      <description>&lt;p&gt;I like videogames and I&amp;rsquo;m overconfident, so naturally when a YouTube video of someone making Minecraft with various levels of &amp;ldquo;from scratch&amp;rdquo; shows up in my feed, I can&amp;rsquo;t help but feel like I could probably do that.&lt;/p&gt;
+&lt;p&gt;Around 6 months ago, I finally decided that I should probably do it, and showcase an awful game that I will justify as being impressive purely because of how much time I wasted reinventing the wheel.&lt;/p&gt;</description>
+      <content>&lt;p&gt;I like videogames and I&amp;rsquo;m overconfident, so naturally when a YouTube video of someone making Minecraft with various levels of &amp;ldquo;from scratch&amp;rdquo; shows up in my feed, I can&amp;rsquo;t help but feel like I could probably do that.&lt;/p&gt;
+&lt;p&gt;Around 6 months ago, I finally decided that I should probably do it, and showcase an awful game that I will justify as being impressive purely because of how much time I wasted reinventing the wheel.&lt;/p&gt;
+&lt;p&gt;Turns out it&amp;rsquo;s much harder than I thought. Primarily because the field of GPU programming in general is a mess with a ton of competing frameworks I&amp;rsquo;m too stupid and inexperienced to choose from right now.&lt;/p&gt;
+&lt;p&gt;Most resources for learning how to do this seem to either abruptly stop a few metres ahead of a 15 year old roblox dev&amp;rsquo;s attention span, or pick up after a PhD in making physically based renders of a raccoon&amp;rsquo;s eyeballs. There seems to be an acute deficiency of intermediate computer graphics. Not that I am an intermediate (yet), it&amp;rsquo;s just that the little Dunning-Kruger shaped gremlin living in my cranium could beat up your dad.&lt;/p&gt;
+&lt;p&gt;This is around the time most people discover Ray Tracing in One Weekend. But soon after rendering the shiny spheres, I realised that the leap from rendering shapes that can be described with a single equation and rendering a kangaroo composed of multiple vertices, faces and materials would require a comically large trampoline. Sure, I could probably fosbury flop a hacky way to render them, but I quickly realised that there would be no videogame at the end of this road I ended up not taking.&lt;/p&gt;
+&lt;p&gt;So I decided the best way forward would be try and replicate the methods used by people before graphics cards were even a thing. Recreating DOOM was out of the question since it wouldn&amp;rsquo;t be something impressive enough to warrant the look of mild amusement from my friends (or anyone in my vicinity of my laptop for that matter) that serves as the apotheosis of my life&amp;rsquo;s screenplay.&lt;/p&gt;
+&lt;p&gt;After firing up the internet archive shaped DeLorean and perusing through the woefully dusty shelf of computer graphics, I came across the wonderous world of software renderers. Where the rendering never needs to be shoved through the unholy orifice of a graphics pipeline. Instead the renderer sees through a 1-D array shaped blinker that is vomited into the framebuffer of your display. To the computer, all its doing is changing values in a singular array that serves as a surrogate for your screen (to be fair its more like one of the 3 eggs in IVF, I&amp;rsquo;m not sure which one). The program never leaves the increasingly warm embrace of your computer&amp;rsquo;s CPU.&lt;/p&gt;
+&lt;p&gt;I will be documenting the entire process of me learning how computer graphics works over here, among other things. Mostly because showing off to a few dozen people just wasn&amp;rsquo;t cutting it anymore, and partly because I hope to fill the gap in computer graphics resources by regurgitating things I barely understand myself.&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>About Me</title>
+      <link>//localhost:1313/about/</link>
+      <pubDate>Wed, 23 Jul 2025 00:00:00 +0000</pubDate>
+      
+      <guid>//localhost:1313/about/</guid>
+      <description>&lt;p&gt;Using these posts to figure out how to do anything would be like trying to relearn how to walk after a traumatic spine injury by watching videos of babies tumbling around. I don&amp;rsquo;t know what I&amp;rsquo;m doing, you have been warned.&lt;/p&gt;
+&lt;p&gt;PS: This website is not a resume.&lt;/p&gt;</description>
+      <content>&lt;p&gt;Using these posts to figure out how to do anything would be like trying to relearn how to walk after a traumatic spine injury by watching videos of babies tumbling around. I don&amp;rsquo;t know what I&amp;rsquo;m doing, you have been warned.&lt;/p&gt;
+&lt;p&gt;PS: This website is not a resume.&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>
