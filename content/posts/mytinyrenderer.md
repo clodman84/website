@@ -1,33 +1,45 @@
 +++
 title = "My Tiny Renderer (1/?)"
 date = "2025-07-24T11:36:59+05:30"
-cover = ""
+cover = "/images/Suzanne1.png"
 coverCaption = ""
 tags = ["Computer Graphics", "Programming", "Software Renderer"]
 keywords = ["", ""]
-draft = true
+draft = false
 toc = true
 +++
 
+## The Bare Minimum
+
+After goofing around for a while, I discovered [ssloy/tinyrenderer](https://github.com/ssloy/tinyrenderer). This is an outline on how to build a really basic software renderer. However, I quickly realised that a lot of what was being done was rather (intentionally) handwavey for my taste and I decided that I would go about implementing everything in my own uniquely deranged way while documenting the process.
+
+So for the first few articles I will be following the general outline of [ssloy/tinyrenderer](https://github.com/ssloy/tinyrenderer). My code will inevitably be slightly different from what ssloy came up with. For instance our line drawing algorithms look slightly different, since we took different routes to get there.
+
+After I'm done with implementing all of the techniques mentioned in the tinyrenderer, I will be making a incredibly sharp turn into realtime rendering with this as the basis.
+
+I made basically no changes to the TGA classes that ssloy came up with, since I plan on ditching the TGA format.
+
+The code at this stage of the article can be found [here](https://github.com/clodman84/mytinyrenderer/tree/ac589bceead901c88d24e9b59ab4d905dbc88d1c)
+
 ## Bresenham Line Drawing Algorithm
 
-![[Pasted image 20241231184039.png]]
+{{< image src="/images/Pasted image 20241231184039.png" position="center" style="border-radius: 8px;" >}}
 
 The Bresenham algorithm is specifically designed to work on lines that go downwards (technically its still upwards its just that the way pixel indexing on displays work) with a slope less than 1. This may seem pretty limiting at first but we will extend this method to draw lines at any angle.
 
 ### Derivation
 
-![[Pasted image 20241231185348.png | 500]]
+{{< image src="/images/Pasted image 20241231185348.png" position="center" style="border-radius: 8px;" >}}
 
 Lets start at \( (x_0, y_0) \) such that \(f(x_0, y_0) = 0 \) and since A, B and C are all integers in the line equation of our choice (they are calculated using start and end point using slopes and so on, you get the idea), so is \(x_0\) and \(y_0\) and is represented by the yellow dot. The intersection of the integral grid lines represent the pixels on the screen.
 
 We move to the right in discrete steps incrementing the value of x. Now we need to decide whether we should colour \((x_0 + 1, y_0)\) or \((x_0 + 1, y_0 + 1)\) we do not need to consider the 8 total vertices since we have limited our scope to lines going downwards with a slope less than 1, that is, it can ONLY be one of those two points.
 
-Rather intuitively we should choose the point that is closest to line. To do this we evaluate the line at the midpoint of both the purple dots i.e \(f(x_0+1, y_0 + \dfrac{1}{2})\) 
+Rather intuitively we should choose the point that is closest to the line. To do this we evaluate the line at the midpoint of both the purple dots i.e \(f(x_0+1, y_0 + \dfrac{1}{2})\) 
 
-If this value is positive, then the midpoint lies above the ideal line and lower purple point \((x_0+1, y_0+1)\) is closer and vice versa.
+If this value is positive, then the midpoint lies above the ideal line and the lower purple point \((x_0+1, y_0+1)\) is closer and vice versa.
 
-We make the chosen purple point the yellow point and repeat.
+We then repeat this process by making the purple point we chose the yellow point.
 
 ### Algorithm for Integer Arithmetic
 
@@ -69,7 +81,7 @@ plotLine(x0, y0, x1, y1)
 
 \(\Delta D_i\) is merely by how much the value of the midpoint calculation changes every time we move repeat this iteration, whereas the constant D itself refers to same evaluation at the midpoint operation that we did before to decide which point needs to be selected.
 
-although later sections cover this it is fruitful to think about how this would change in the case where the slope is negative, i.e, we have to choose between the points \((x_0 + 1, y_0)\) and \((x_0 + 1, y_0 - 1)\) with the midpoint now being \((x_0+1, y_0 - \dfrac{1}{2})\). Giving us the following:
+Although later sections cover this it is fruitful to think about how this would change in the case where the slope is negative, i.e, we have to choose between the points \((x_0 + 1, y_0)\) and \((x_0 + 1, y_0 - 1)\) with the midpoint now being \((x_0+1, y_0 - \dfrac{1}{2})\). Giving us the following:
 $$
 \Delta D_i = f(x_i + 1, y_i - \frac12) - f(x_i, y_i)
 $$
@@ -84,10 +96,12 @@ $$
 \Delta D = A[x_0 + 2] + B[y_0 - \frac32] + C - (A[x_0 + 1] + B[y_0 - \frac12] + C)
 $$
 Which evaluates to \(-\Delta y - \Delta x\)
+
 ### Extending it to any angle
 
-![[Pasted image 20250101152019.png]]
-Right now the algorithm only works in octant 1 (the diagram is using regular coordinates instead of the upside coordinate system on screens)
+{{< image src="/images/Pasted image 20250101152019.png" position="center" style="border-radius: 8px;" >}}
+
+Right now the algorithm only works in octant 1 (the diagram is using regular coordinates instead of the upside coordinate system by screens which in turn is the vestigial remnant of old CRT monitors)
 
 Lets consider the case where the slope is \(>1\) the algorithm is identical if we iterate over y instead of iterating over x, and we also need to change the second point of consideration from \((x_0 + 1, y_0)\) to \((x_0, y_0 + 1)\). Moreover the midpoint of the two points we have to choose from changes to \((x_0 + \frac12, y_0+1)\). All of these changes are immediately handled if we just swap the variables \(x_0\) and \(y_0\) and \(x_1\) and \(y_1\) and plot y, x instead of x, y since the variables are now inverted. Don't take my word for it, try it and see.
 
@@ -112,7 +126,8 @@ plotLine(x0, y0, x1, y1)
         D = D + 2*dy
 ```
 
-![[Pasted image 20250101160933.png]]
+{{< image src="/images/Pasted image 20250101160933.png" position="center" style="border-radius: 8px;" >}}
+
 Now we have octant 1 and 2 done, what about octant 5 and 6. The above diagram shows us whats different between the two quadrants. Notice that the only difference in octant 5 and 6 is the direction in which our lines are being drawn, if we just swap the points whenever \(x_0 > x_1\) we get what we are looking for. Should we be doing this after or before the swap in case the slope is greater than 1? We should be doing this after we decide to swap variables for greater slopes. Because what we are doing right now is changing the order of the variables we are meant to be looping over, and the the swap for the loops is deciding *which* variable *x or y* we need to be looping over.
 
 ```
@@ -171,6 +186,42 @@ plotLine(x0, y0, x1, y1)
 
 The changes that we made to plot octants 5 and 6 still apply as its a valid operation for the entire left half of the plane and by making these changes octants 3 and 4 get covered on their own with no further changes.
 
+In C++ everything we've done so far looks like this:
+```C++
+void line(int x0, int y0, int x1, int y1, TGAColor colour, TGAImage *image){
+        // Bresenham Algorithm from Wikipedia (not exactly but pretty much the same)
+        bool steep = false;
+        if (std::abs(y1-y0)> std::abs(x1-x0)){
+                std::swap(x0, y0);
+                std::swap(x1, y1);
+                steep = true;
+        }
+        if (x0 > x1) {
+                std::swap(x0, x1);
+                std::swap(y0, y1);
+        }
+        int yi = 1;
+        int dx = x1 - x0;
+        int dy = y1 - y0;
+        if (dy < 0){
+                yi = -1;
+                dy = -dy;
+        }
+        int D =  2*dy - dx;
+        int y = y0;
+
+        for (int x = x0; x <= x1; x++){
+                if(steep) image->set(y, x, colour); 
+                else image->set(x, y, colour);
+                if (D > 0){
+                        y += yi;
+                        D -= 2*dx;
+                }
+                D += 2*dy;
+        }
+}
+```
+
 ## Wavefront OBJ File Format
 
 Anything following a hash character (#) is a comment.
@@ -205,13 +256,11 @@ f ...
 l 5 8 1 2 4 9
 ```
 
-### Face Elements
-
 Faces are defined using lists of vertex, texture and normal indices in the format vertex_index/texture_index/normal_index for which each index starts at 1 and increases corresponding to the order in which the referenced element was defined. Polygons such as quadrilaterals can be defined by using more than three indices.
 
 ## Rendering a Wireframe
 
-As outlined by the [[Wavefront OBJ File Format]] we will have to read the array of vertices that have v as the first character in the line
+As outlined by the Wavefront OBJ File Format we will have to read the array of vertices that have v as the first character in the line
 
 ```
 v 0.437500 0.164063 0.765625
@@ -259,7 +308,6 @@ struct Vec3 {
 	} 
 };
 ```
-
 All right, now that we have vector like we are used to in mathematics we can move on to representing models.
 
 ```C++
@@ -281,7 +329,6 @@ public:
 	std::vector<int> face(int idx);
 };
 ```
-
 Now we need a program a way to construct this model and define all the methods we've declared here.
 
 ```C++
@@ -343,7 +390,7 @@ Now we have a way to read wireframes.
 
 ### Rendering
 
-![[Pasted image 20250104170627.png]]
+{{< image src="/images/Pasted image 20250104170627.png" position="center" style="border-radius: 8px;" >}}
 
 ```C++
 int main(int argc, char** argv) {
@@ -367,13 +414,13 @@ int main(int argc, char** argv) {
 }
 ```
 
-This is extremely straightforward so I am not gonna bother explaining whats going on in detail, it just connects the line and draws them using the [[Bresenham’s Line Drawing Algorithm]]
+This is extremely straightforward so I am not gonna bother explaining whats going on in detail, it just connects the line and draws them using Bresenham’s Line Drawing Algorithm.
 
 Suzanne is upside down, but that is because while .obj uses coordinates that are the right way up, the coordinate system of displays is upside down.
 
-Moreover, since we are completely ignoring the z value of the vector we are effectively looking at a shadow of Suzanne ([[orthographic projection]]) that is cast from a light source at infinity.
+Moreover, since we are completely ignoring the z value of the vector we are effectively looking at a shadow of Suzanne orthographic projection that is cast from a light source at infinity.
 
-Moreover the image looks funky as hell, there are clearly too many lines and we are rendering too much of the scene, we can make this better by discarding the faces that are pointing away from the camera.
+The image looks funky as hell, there are clearly too many lines and we are rendering too much of the scene, we can make this better by discarding the faces that are pointing away from the camera.
 
 ssloy/tinyrenderer uses z-buffers in the next few lessons, but I am not there yet and I want to use simple normal vector based culling right now and look at Suzanne in all her glory.
 
@@ -405,15 +452,19 @@ int main(int argc, char** argv) {
 }
 ```
 
-![[Suzanne1.png]]!
+{{< image src="/images/Suzanne1.png" position="center" style="border-radius: 8px;" >}}
+
+Better.
 
 ## Line Sweeping Triangle Rasterisation
 
 We need to colour the triangle by drawing horizontal lines from one side of the triangle to the other. But how do we decide which side we need to start from.
-![[sides 1.png| 500]]
+
+{{< image src="/images/sides 1.png" position="center" style="border-radius: 8px;" >}}
+
 Its pretty clear that when we do this horizontal line sweeping there is one line that is drawn towards or from, in the image above we want horizontal lines to either start at the white lines of in the case of the smallest triangle end at the white line. 
 
-By looking at it is clear that the white line is the one which has the maximum y "component". And to find that, basic[[Bubble Sort | bubble sort]] is sufficient.
+By looking at it is clear that the white line is the one which has the maximum y "component". And to find that, basic bubble sort is sufficient.
 
 ```C++
 void triangle(Vec3 p0, Vec3 p1, Vec3 p2, TGAColor colour, TGAImage *image){
@@ -432,7 +483,7 @@ void triangle(Vec3 p0, Vec3 p1, Vec3 p2, TGAColor colour, TGAImage *image){
 
 Consider the lower half of the triangle, we will be drawing horizontal lines that start from one of the lines and end at the other, and its much easier to do this when we think in terms of vectors, the diagram below is very self explanatory, we are merely scaling the vectors along those lines by how far up we go.
 
-![[IMG_20250113_200635.jpg]]
+{{< image src="/images/IMG_20250113_200635.jpg" position="center" style="border-radius: 8px;" >}}
 
 ```C++
 void triangle(Vec3 p0, Vec3 p1, Vec3 p2, TGAColor colour, TGAImage *image){
@@ -462,9 +513,9 @@ void triangle(Vec3 p0, Vec3 p1, Vec3 p2, TGAColor colour, TGAImage *image){
 }
 ```
 
-![[bottom_half.png|500]]
+{{< image src="/images/bottom_half.png" position="center" style="border-radius: 8px;" >}}
 
-I know I said bottom half, and this is the top half, I just didn't bother flipping the y-axis, display nonsense
+I know I said bottom half, and this is the top half, I just didn't bother flipping the y-axis, display nonsense (maybe at this point I should just invert the y-axis while rendering).
 
 And we can do something similar for the top half
 
@@ -509,4 +560,4 @@ void triangle(Vec3 p0, Vec3 p1, Vec3 p2, TGAColor colour, TGAImage *image){
 }
 ```
 
-![[full_triangle.png|500]]
+{{< image src="/images/full_triangle.png" position="center" style="border-radius: 8px;" >}}
