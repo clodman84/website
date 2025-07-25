@@ -7,6 +7,7 @@ tags = ["Computer Graphics", "Programming", "Software Renderer"]
 keywords = ["", ""]
 draft = false
 toc = true
+color = "orange" #color from the theme settings
 +++
 
 ## The Bare Minimum

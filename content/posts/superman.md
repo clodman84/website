@@ -5,12 +5,11 @@ author = ""
 authorTwitter = "" #do not include @
 cover = "/images/shrinkage.webp"
 coverCaption = ""
-tags = ["Blue"]
+tags = ["Rambling"]
 keywords = ["", ""]
 description = ""
 showFullContent = false
 readingTime = true 
-color = "blue" #color from the theme settings
 math = false
 draft = true 
 +++
