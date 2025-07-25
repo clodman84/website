@@ -12,7 +12,7 @@ showFullContent = false
 readingTime = true 
 color = "blue" #color from the theme settings
 math = false
-draft = false 
+draft = true 
 +++
 
 A bird, a plane, an intercontinental ballistic missile, they all have one thing in common, they need to know where they are (or aren't). But Superman doesn't have pockets to keep his phone while flying across thousands of kilometres with the precision of a wandering albatross. How could he possibly know where he's going?
@@ -78,5 +78,3 @@ You don't always have to know where you're going, only what you're leaving behin
 {{< rhtml >}}
 <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/20JoYLakgIgRpD8uUGnBOc?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
 {{< /rhtml >}}
-
-Here's a song for making it to the end of this article.
