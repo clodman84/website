@@ -3,7 +3,7 @@ date = '2025-07-23T19:31:45+05:30'
 draft = false 
 tags = ['Computer Graphics', 'Programming']
 title = 'Computer Graphics'
-cover = 'images/quake.png'
+cover = 'images/quake.webp'
 coverCaption = "Quake 1996"
 ToC = false
 +++
@@ -25,5 +25,5 @@ After firing up the internet archive shaped DeLorean and perusing through the wo
 I will be documenting the entire process of me learning how computer graphics works over here, among other things. Mostly because showing off to a few dozen people just wasn't cutting it anymore, and partly because I hope to fill the gap in computer graphics resources by regurgitating things I barely understand myself.
 
 {{<rhtml>}}
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4Kh8w1MgC7LYHSbSX2lDzP?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4Kh8w1MgC7LYHSbSX2lDzP?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
 {{</rhtml>}}

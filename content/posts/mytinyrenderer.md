@@ -484,7 +484,7 @@ void triangle(Vec3 p0, Vec3 p1, Vec3 p2, TGAColor colour, TGAImage *image){
 
 Consider the lower half of the triangle, we will be drawing horizontal lines that start from one of the lines and end at the other, and its much easier to do this when we think in terms of vectors, the diagram below is very self explanatory, we are merely scaling the vectors along those lines by how far up we go.
 
-{{< image src="/images/IMG_20250113_200635.jpg" position="center" style="border-radius: 8px;" >}}
+{{< image src="/images/IMG_20250113_200635.webp" position="center" style="border-radius: 8px;" >}}
 
 ```C++
 void triangle(Vec3 p0, Vec3 p1, Vec3 p2, TGAColor colour, TGAImage *image){
