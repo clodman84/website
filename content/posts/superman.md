@@ -42,11 +42,11 @@ So if Superman was really using the stars to navigate, he would need to fly arou
 
 # On Rocks and Nukes 
 
-{{< figure src="/images/ENIAC.webp" position="center" style="border-radius: 8px;" caption="Gloria Ruth Gordon and Ester Gerston, early ENIAC programmers in front of a patch bay">}}
-
 A "ballistic" body is something that is guided purely during a brief initial phase of flight, with the subsequent trajectory subject to the whims of air resistance and gravity. Making things go ballistic has always been a staple of our species. We're unnaturally efficient at turning the act of hurling objects into forms of entertainment, sustenance and warfare. It's really no wonder that the computer itself was a byproduct of us trying to figure out where the things we're flinging inevitably succumbs to the omnipresent shackle of the Earth's gravity. The kind of computation the Hulk would have to do before he just jumps really hard and lands exactly where he intends to. 
 
 23 years after the development of the first aeronautical sextant, the ENIAC was built. It was the world's first programmable computer and was originally designed to calculate artillery firing tables. Pretty soon the ENIAC shifted it's focus to simulating the randomness of nuclear decay, something that makes a lot of sense when you realise that the ENIAC was built in 1945, a rather explosive time to be alive. The Monte Carlo simulation run on the ENIAC was written by Klara Dan von Neumann. She also developed the world's first weather forecast on the ENIAC.
+
+{{< figure src="/images/ENIAC.webp" position="center" style="border-radius: 8px;" caption="Gloria Ruth Gordon and Ester Gerston, early ENIAC programmers in front of a patch bay">}}
 
 The ENIAC was the beginning of the rapidly shrinking size of computing machines, and was retired after 70000 hours of use. Later iterations like the EDVAC and ORDVAC worked in binary unlike the ENIAC which was still built around the biological and cultural simplicity of base 10. Development on both of them continued in the Ballistic Research Laboratory. Computers would go on to become a indispensable tool that they are now, and if Superman wants to go anywhere, he'll need one.
 
