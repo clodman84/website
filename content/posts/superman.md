@@ -3,7 +3,8 @@ title = "How does Superman know where he isn't?"
 date = "2025-07-25T12:57:56+05:30"
 author = ""
 authorTwitter = "" #do not include @
-
+cover = "/images/shrinkage.webp"
+coverCaption = ""
 tags = ["Rambling"]
 keywords = ["", ""]
 description = ""
@@ -11,9 +12,6 @@ showFullContent = false
 readingTime = true 
 math = false
 draft = false 
-
-[cover] 
-image = "/images/shrinkage.webp"
 +++
 
 A bird, a plane, a cruise missile, they all have one thing in common, they need to know where they are (or aren't). But Superman doesn't have pockets to keep his phone in, how could he possibly know where he's going?

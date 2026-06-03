@@ -3,10 +3,8 @@ date = '2025-07-23T19:31:45+05:30'
 draft = false 
 tags = ['Computer Graphics', 'Programming']
 title = 'Computer Graphics'
-
-[cover]
-image  = 'images/quake.webp'
-
+cover = 'images/quake.webp'
+coverCaption = "Quake 1996"
 ToC = false
 +++
 

@@ -1,49 +1,71 @@
-baseURL = "https://clodman84.pages.dev/"
+baseurl = "https://clodman84.pages.dev/"
+locale = "en-us"
+theme = "re-terminal"
 title = "Monkey Business"
-theme = "PaperMod"
 pagination.pagerSize = 5
 
-enableRobotsTXT = true
+[markup.highlight]
+noClasses = false
 
 [params]
-  author = "clodman84"
-  description = "A place to remember and show off the things I've done"
-  ShowReadingTime = true
-  ShowPostNavLinks = true
-  ShowBreadCrumbs = false
-  ShowCodeCopyButtons = true
-  ShowToc = true
-  TocOpen = false
+contentTypeName = "posts"
+math = true
+themeColor = "green"
+showMenuItems = 2
+showLanguageSelector = false
+fullWidthTheme = false
+centerTheme = true
+autoCover = true
+showLastUpdated = false
+readingTime = true
+Toc = false
+TocTitle = "Contents"
 
-[params.homeInfoParams]
-  Title = "Monkey Business"
-  Content = "A place to remember and show off the things I've done"
+[params.twitter]
+creator = ""
+site = ""
 
-[[params.socialIcons]]
-  name = "github"
-  url = "https://github.com/clodman84"
+[languages]
+[languages.en]
+label = "English"
+title = "Monkey Business"
 
-[markup.highlight]
-  noClasses = false
+[languages.en.params]
+subtitle = "A place to remember and show off the things I've done"
+owner = "clodman84"
+keywords = ""
+copyright = ""
+menuMore = "Show more"
+readMore = "Read more"
+readOtherPosts = "Read other posts"
+newerPosts = "Newer posts"
+olderPosts = "Older posts"
+missingContentMessage = "Page not found..."
+missingBackButtonLabel = "Back to home page"
+minuteReadingTime = "min read"
+words = "words"
+
+[languages.en.params.logo]
+logoText = "clodman84"
+logoHomeLink = "/"
+
+[[languages.en.menu.main]]
+identifier = "categories"
+name = "Tags"
+url = "/tags"
+
+[[languages.en.menu.main]]
+identifier = "about"
+name = "About"
+url = "/about"
+
+[caches]
+[caches.images]
+dir = ':cacheDir/images'
 
 [markup.goldmark.extensions.passthrough]
-  enable = true
+enable = true
 
 [markup.goldmark.extensions.passthrough.delimiters]
-  block = [['\[', '\]'], ['$$', '$$']]
-  inline = [['\(', '\)']]
-
-[caches.images]
-  dir = ':cacheDir/images'
-
-[[menus.main]]
-  identifier = "tags"
-  name = "Tags"
-  url = "/tags"
-  weight = 1
-
-[[menus.main]]
-  identifier = "about"
-  name = "About"
-  url = "/about"
-  weight = 2
+block = [['\[', '\]'], ['$$', '$$']]
+inline = [['\(', '\)']]
