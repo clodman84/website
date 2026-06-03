@@ -1,13 +1,13 @@
 +++
 title = "My Tiny Renderer (1/?)"
 date = "2025-07-24T11:36:59+05:30"
-cover = "/images/Suzanne1.png"
-coverCaption = ""
 tags = ["Computer Graphics", "Programming", "Software Renderer"]
 keywords = ["", ""]
 draft = false
 toc = true
 color = "orange" #color from the theme settings
+[cover] 
+image  = "/images/Suzanne1.png"
 +++
 
 ## The Bare Minimum

@@ -3,8 +3,7 @@ title = "How does Superman know where he isn't?"
 date = "2025-07-25T12:57:56+05:30"
 author = ""
 authorTwitter = "" #do not include @
-cover = "/images/shrinkage.webp"
-coverCaption = ""
+
 tags = ["Rambling"]
 keywords = ["", ""]
 description = ""
@@ -12,6 +11,9 @@ showFullContent = false
 readingTime = true 
 math = false
 draft = false 
+
+[cover] 
+image = "/images/shrinkage.webp"
 +++
 
 A bird, a plane, a cruise missile, they all have one thing in common, they need to know where they are (or aren't). But Superman doesn't have pockets to keep his phone in, how could he possibly know where he's going?
@@ -80,6 +82,4 @@ After completing their primary missions, both Voyagers continued outward, eventu
 
 In 296,000 years Voyager 2 will be 4.3 light years away from Sirius, but it is headed nowhere in particular. All 5 interstellar probes wander aimlessly. All of them are powered by plutonium reactors, an element first synthesised at scale during the Manhattan Project, of which many of our Martians were a part of. The Martians, (like the titular kryptonian), had to leave behind their homes, uncertain about what was to come, accepting whatever role they could. The Polynesian mythologies, that served to guide their people for millenia, were dreamt up by those who had no idea where they were headed. Sometimes you don't have to know where you're going, only what you're leaving behind.
 
-{{< rhtml >}}
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/14joz9oqnhYORgpKOmE0Aj?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-{{< /rhtml >}}
+{{< spotify 14joz9oqnhYORgpKOmE0Aj >}}
