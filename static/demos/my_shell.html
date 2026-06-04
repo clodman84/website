@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>snake</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Fira Code', 'Courier New', monospace;
+      color: #1c8c1c;
+      font-size: 12px;
+    }
+    #frame {
+      position: relative;
+      border: 1px solid #1c8c1c;
+      box-shadow: 0 0 12px rgba(51,255,51,0.15), inset 0 0 12px rgba(0,0,0,0.8);
+    }
+    #frame::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px
+      );
+      pointer-events: none;
+      z-index: 10;
+    }
+    #frame::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.5) 100%);
+      pointer-events: none;
+      z-index: 11;
+    }
+    canvas {
+      display: block;
+      image-rendering: pixelated;
+    }
+    #label {
+      margin-top: 0.6rem;
+      color: #0f5c0f;
+      letter-spacing: 0.1em;
+    }
+    #status {
+      margin-top: 0.3rem;
+      color: #1c8c1c;
+      min-height: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <div id="frame">
+    <canvas id="canvas"></canvas>
+  </div>
+  <div id="label">[ SDL3 SNAKE DEMO ]</div>
+  <div id="status"></div>
+
+  <script>
+    var Module = {
+      canvas: document.getElementById('canvas'),
+      setStatus: function(text) {
+        var el = document.getElementById('status');
+        el.textContent = text;
+      },
+      onRuntimeInitialized: function() {
+        document.getElementById('status').textContent = '';
+      },
+      print: function(text) { console.log(text); },
+      printErr: function(text) { console.error(text); },
+    };
+  </script>
+  {{{ SCRIPT }}}
+</body>
+</html>
