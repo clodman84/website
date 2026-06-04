@@ -1,2 +1,1 @@
-/kuhoo/*  /?redirect=/kuhoo/:splat  302
-/kuhoo    /kuhoo                    200
+/kuhoo/*  /gatekeeper/?redirect=/kuhoo/:splat  302
