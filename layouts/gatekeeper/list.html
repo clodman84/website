@@ -133,7 +133,7 @@
     @keyframes cb { 0%,100%{opacity:1;} 50%{opacity:0;} }
 
     #msg { min-height: 1.4em; margin-top: 0.2rem; }
-    #hid { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    #hid { position: fixed; top: -9999px; opacity: 0; width: 1px; height: 1px; }
   </style>
 </head>
 <body>
@@ -169,7 +169,7 @@
     </div>
   </div>
 
-  <input id="hid" type="password" autocomplete="off">
+  <input id="hid" type="password" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">
 
   <script>
     /* ── CONFIG ──────────────────────────────────────────────── */
@@ -272,6 +272,10 @@
     splash.addEventListener('click',    startSequence);
     splash.addEventListener('touchstart', startSequence, { passive: true });
     document.addEventListener('keydown', e => { if (!started) startSequence(); });
+
+    wrapEl.addEventListener('click', () => {
+       if (booted) hid.focus();
+    });
 
     /* ── VERTICAL CENTERING ──────────────────────────────────── */
     function nudgeSpacer() {
@@ -570,6 +574,7 @@
         msg.className = 'log-line g';
         msg.textContent = '[ AUTH ] credentials verified — access granted.';
         val = ''; hid.value = ''; renderChars();
+	sessionStorage.setItem('auth', '1');
         await sleep(650);
         msg.textContent = '[ SYS  ] opening session...';
         await sleep(550);
