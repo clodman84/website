@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ .Site.Title }} — restricted</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #060606;
+      color: #33ff33;
+      font-family: 'Fira Code', 'Courier New', monospace;
+      font-size: clamp(11px, 2.5vw, 13px);
+      height: 100dvh;
+      overflow: hidden;
+      position: relative;
+      cursor: default;
+    }
+
+    /* ── CRT layers ─────────────────────────────────────────── */
+    #crt-glow {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      background: radial-gradient(ellipse at 50% 48%, rgba(0,80,0,0.13) 0%, transparent 68%);
+    }
+    #crt-scan {
+      position: fixed; inset: 0; pointer-events: none; z-index: 10;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.22) 2px, rgba(0,0,0,0.22) 4px
+      );
+    }
+    #crt-rgb {
+      position: fixed; inset: 0; pointer-events: none; z-index: 9;
+      background: repeating-linear-gradient(90deg,
+        rgba(255,0,0,.025) 0px, rgba(255,0,0,.025) 1px,
+        rgba(0,255,0,.025) 1px, rgba(0,255,0,.025) 2px,
+        rgba(0,0,255,.025) 2px, rgba(0,0,255,.025) 3px
+      );
+    }
+    #crt-vign {
+      position: fixed; inset: 0; pointer-events: none; z-index: 11;
+      background: radial-gradient(ellipse at center,
+        transparent 42%, rgba(0,0,0,0.72) 82%, rgba(0,0,0,0.96) 100%
+      );
+    }
+    #crt-aber {
+      position: fixed; inset: 0; pointer-events: none; z-index: 12;
+      mix-blend-mode: screen;
+      box-shadow: inset 3px 0 0 rgba(255,0,0,.04),
+                  inset -3px 0 0 rgba(0,100,255,.05);
+    }
+
+    /* ── Splash screen ───────────────────────────────────────── */
+    #splash {
+      position: fixed; inset: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 1.4rem;
+      cursor: pointer;
+      animation: flicker 8s infinite;
+      filter: blur(0.2px);
+      text-shadow: 0 0 4px #33ff33, 0 0 10px rgba(51,255,51,.25);
+    }
+    #splash-prompt {
+      color: #1a9a1a;
+      font-size: clamp(14px, 3.5vw, 18px);
+      display: flex; align-items: center; gap: 0.5ch;
+    }
+    #splash-caret {
+      display: inline-block;
+      width: 10px; height: 1.15em;
+      background: #33ff33; vertical-align: middle;
+      box-shadow: 0 0 6px #33ff33, 0 0 14px rgba(51,255,51,.55);
+      animation: cb 1s step-end infinite;
+    }
+    #splash-hint {
+      color: #0d600d;
+      font-size: clamp(10px, 2vw, 12px);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Boot screen ─────────────────────────────────────────── */
+    #wrap {
+      position: fixed; inset: 0; z-index: 5;
+      display: flex; flex-direction: column;
+      padding: 2rem clamp(0.9rem, 5vw, 2.5rem);
+      overflow: hidden;
+      max-width: 680px;
+      margin: 0 auto; width: 100%;
+      animation: flicker 8s infinite;
+      filter: blur(0.22px);
+      text-shadow: 0 0 4px #33ff33, 0 0 10px rgba(51,255,51,.26);
+    }
+
+    @keyframes flicker {
+      0%,82%,84%,88%,91%,95%,97%,100% { opacity: 1; }
+      83%  { opacity: .78; }
+      89%  { opacity: .91; }
+      96%  { opacity: .85; }
+    }
+
+    /* Spacer shrinks as content grows, keeping lines vertically centred */
+    #spacer { flex: 0 0 50%; min-height: 0; }
+
+    #lines { display: flex; flex-direction: column; }
+
+    .log-line {
+      margin: 0; white-space: pre-wrap;
+      word-break: break-all; line-height: 1.65;
+    }
+    .gap { height: 0.45rem; }
+
+    .g   { color: #33ff33; }
+    .d   { color: #1a9a1a; }
+    .dim { color: #0a4a0a; }
+    .y   { color: #d4e000; }
+    .r   { color: #ff4444; }
+
+    /* ── Auth section ───────────────────────────────────────── */
+    #auth          { display: none; margin-top: 0.3rem; }
+    #prompt-area   { display: flex; align-items: center; }
+    #plabel        { color: #1a9a1a; flex-shrink: 0; white-space: pre; }
+    #chars         { display: flex; flex-wrap: wrap; align-items: center; }
+
+    .ch { display: inline-block; width: 8px; height: 14px; vertical-align: middle; }
+    .ch.active {
+      background: #33ff33;
+      box-shadow: 0 0 6px #33ff33, 0 0 14px rgba(51,255,51,.55);
+      animation: cb 1s step-end infinite;
+    }
+    .ch.filled { background: #1a9a1a; }
+
+    @keyframes cb { 0%,100%{opacity:1;} 50%{opacity:0;} }
+
+    #msg { min-height: 1.4em; margin-top: 0.2rem; }
+    #hid { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  </style>
+</head>
+<body>
+
+  <!-- CRT overlays (always present) -->
+  <div id="crt-glow"></div>
+  <div id="crt-scan"></div>
+  <div id="crt-rgb"></div>
+  <div id="crt-vign"></div>
+  <div id="crt-aber"></div>
+
+  <!-- Splash: the user gesture gate -->
+  <div id="splash">
+    <div id="splash-prompt">
+      <span class="d">&gt;</span>
+      <span style="color:#1a9a1a;margin-left:0.4ch;">start</span>
+      <span id="splash-caret"></span>
+    </div>
+    <div id="splash-hint">press any key or tap to continue</div>
+  </div>
+
+  <!-- Boot terminal -->
+  <div id="wrap">
+    <div id="spacer"></div>
+    <div id="lines"></div>
+    <div id="auth">
+      <div class="gap"></div>
+      <div id="prompt-area">
+        <span id="plabel">password &gt;&nbsp;</span>
+        <div id="chars"></div>
+      </div>
+      <p id="msg" class="log-line"></p>
+    </div>
+  </div>
+
+  <input id="hid" type="password" autocomplete="off">
+
+  <script>
+    /* ── CONFIG ──────────────────────────────────────────────── */
+    const PASS     = 'kuhoo';
+    const REDIRECT = '{{ .Site.BaseURL }}kuhoo/gpu_renderer/';
+    const BAR_W    = 23; /* progress bar fill width in block chars */
+
+    /* ── STATE ───────────────────────────────────────────────── */
+    let val = '', booted = false, started = false;
+    let ctx = null, humGain = null;
+
+    const wrapEl  = document.getElementById('wrap');
+    const spacer  = document.getElementById('spacer');
+    const linesEl = document.getElementById('lines');
+    const authEl  = document.getElementById('auth');
+    const chars   = document.getElementById('chars');
+    const msg     = document.getElementById('msg');
+    const hid     = document.getElementById('hid');
+    const splash  = document.getElementById('splash');
+
+    /* ── AUDIO ───────────────────────────────────────────────── */
+    /*
+      Called synchronously inside the user-gesture handlers for the
+      splash screen. AudioContext is created (and therefore starts
+      in the 'running' state) directly inside the gesture, which is
+      the only reliable cross-browser way to satisfy autoplay policy.
+    */
+    function initAudio() {
+      if (ctx) return;
+      try {
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+        /* Background 60 Hz electrical hum */
+        humGain = ctx.createGain();
+        humGain.gain.setValueAtTime(0, ctx.currentTime);
+        humGain.connect(ctx.destination);
+
+        const hpf = ctx.createBiquadFilter();
+        hpf.type = 'highpass'; hpf.frequency.value = 52;
+        const lpf = ctx.createBiquadFilter();
+        lpf.type = 'lowpass';  lpf.frequency.value = 320;
+
+        [59.8, 60.2].forEach(f => {
+          const o = ctx.createOscillator();
+          o.type = 'sawtooth'; o.frequency.value = f;
+          o.connect(hpf); o.start();
+        });
+        hpf.connect(lpf); lpf.connect(humGain);
+
+        /* Fade hum in over 2 s so it doesn't jar on boot */
+        humGain.gain.linearRampToValueAtTime(0.038, ctx.currentTime + 2.0);
+      } catch(e) {}
+    }
+
+    function beep(freq, dur, vol, type, detune) {
+      if (!ctx) return;
+      try {
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = type || 'square';
+        o.frequency.value = freq || 400;
+        if (detune) o.detune.value = detune;
+        g.gain.setValueAtTime(vol || 0.08, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + (dur || 0.05));
+        o.connect(g); g.connect(ctx.destination);
+        o.start(); o.stop(ctx.currentTime + (dur || 0.05) + 0.01);
+      } catch(e) {}
+    }
+
+    function chunkBeep() {
+      const fs = [260, 290, 310, 340, 380, 420, 450];
+      beep(
+        fs[Math.floor(Math.random() * fs.length)],
+        0.028 + Math.random() * 0.022, 0.05, 'square',
+        (Math.random() - .5) * 28
+      );
+    }
+    function okBeep()   { beep(600,.06,.07,'square'); setTimeout(()=>beep(900,.05,.06,'square'),70); }
+    function bootBeep() {
+      beep(220,.14,.1,'sawtooth');
+      setTimeout(()=>beep(330,.10,.08,'sawtooth'),140);
+      setTimeout(()=>beep(440,.16,.09,'square'),280);
+    }
+    function denyBeep()  { beep(180,.22,.12,'sawtooth'); setTimeout(()=>beep(120,.32,.10,'sawtooth'),190); }
+    function grantBeep() { [440,550,660,880].forEach((f,i)=>setTimeout(()=>beep(f,.13,.09,'square'),i*105)); }
+
+    /* ── SPLASH / START GATE ─────────────────────────────────── */
+    function startSequence() {
+      if (started) return;
+      started = true;
+      initAudio(); /* <-- inside gesture handler, always unlocks */
+      splash.style.transition = 'opacity 0.35s';
+      splash.style.opacity = '0';
+      setTimeout(() => {
+        splash.style.display = 'none';
+        boot();
+      }, 350);
+    }
+
+    splash.addEventListener('click',    startSequence);
+    splash.addEventListener('touchstart', startSequence, { passive: true });
+    document.addEventListener('keydown', e => { if (!started) startSequence(); });
+
+    /* ── VERTICAL CENTERING ──────────────────────────────────── */
+    function nudgeSpacer() {
+      const pad       = parseFloat(getComputedStyle(wrapEl).paddingTop) * 2;
+      const available = wrapEl.offsetHeight - pad;
+      const contentH  = linesEl.offsetHeight + authEl.offsetHeight;
+      const target    = Math.max(0, (available - contentH) / 2);
+      spacer.style.flex = '0 0 ' + target + 'px';
+    }
+    window.addEventListener('resize', nudgeSpacer);
+
+    /* ── HELPERS ─────────────────────────────────────────────── */
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+    function addLine(cls) {
+      const p = document.createElement('p');
+      p.className = 'log-line ' + (cls || 'g');
+      p.textContent = '\u00A0';
+      linesEl.appendChild(p);
+      nudgeSpacer();
+      return p;
+    }
+
+    function addGap() {
+      const d = document.createElement('div');
+      d.className = 'gap';
+      linesEl.appendChild(d);
+      nudgeSpacer();
+    }
+
+    async function type(el, text, speed, variance) {
+      el.textContent = '';
+      for (let i = 0; i < text.length; i++) {
+        el.textContent += text[i];
+        if (text[i] !== ' ' && Math.random() < 0.52) chunkBeep();
+        const jitter = Math.random() < 0.06 ? speed * 3.5 : 0;
+        await sleep(speed + Math.random() * variance + jitter);
+      }
+      nudgeSpacer();
+    }
+
+    async function typeLine(text, cls, speed, variance) {
+      const p = addLine(cls || 'g');
+      await type(p, text, speed || 20, variance || 24);
+      return p;
+    }
+
+    async function multiLine(lines, cls, speed, gap) {
+      for (const l of lines) {
+        const p = addLine(cls || 'd');
+        await type(p, l, speed || 8, 5);
+        await sleep((gap || 18) + Math.random() * 26);
+      }
+    }
+
+    /* ── ROW SYSTEM ──────────────────────────────────────────── */
+    const COLS = {
+      section: 4,
+      text: 44,
+      value: 20,
+    };
+
+    const RowType = {
+      ROW:      "row",
+      PROGRESS: "progress",
+      GAP:      "gap",
+      BANNER:   "banner",
+    };
+
+    function renderRow({ section = "", text = "", status = "", value = "" }) {
+      return (
+        `[ ${section.padEnd(COLS.section)} ] ` +
+        text.padEnd(COLS.text) +
+        (status || value || "")
+      );
+    }
+
+    function renderOkRow(section, text) {
+      return renderRow({ section, text, status: "OK" });
+    }
+
+    async function renderProgress({ section, text }, stepMs = 28) {
+      const p = addLine("d");
+      const label =
+        `[ ${section.padEnd(COLS.section)} ] ` +
+        text.padEnd(18);
+
+      for (let i = 0; i <= BAR_W; i++) {
+        const filled = "█".repeat(i);
+        const empty  = "░".repeat(BAR_W - i);
+        const pct    = String((i / BAR_W * 100) | 0).padStart(3);
+        p.innerHTML =
+          `<span class="d">${label}[</span>` +
+          `<span class="g">${filled}</span>` +
+          `<span class="dim">${empty}</span>` +
+          `<span class="d">]</span> ` +
+          `<span class="d">${pct}%</span>`;
+        nudgeSpacer();
+        if (i < BAR_W) await sleep(stepMs + Math.random() * 18);
+      }
+
+      p.innerHTML =
+        `<span class="d">${label}[</span>` +
+        `<span class="g">${"█".repeat(BAR_W)}</span>` +
+        `<span class="d">]</span> ` +
+        `<span class="g">DONE</span>`;
+
+      okBeep();
+    }
+
+    async function renderItem(item) {
+      switch (item.type) {
+        case RowType.GAP:
+          addGap();
+          return;
+
+        case RowType.BANNER:
+          await typeLine(
+            item.text,
+            item.cls || "y",
+            item.speed || 20,
+            item.variance || 8
+          );
+          return;
+
+        case RowType.ROW:
+          await typeLine(
+            renderRow(item),
+            item.cls || "d",
+            item.speed || 8,
+            item.variance || 5
+          );
+          return;
+
+        case RowType.PROGRESS:
+          await renderProgress(item, item.stepMs);
+          return;
+      }
+    }
+
+    /* ── BOOT ────────────────────────────────────────────────── */
+    async function boot() {
+      await sleep(180);
+      bootBeep();
+
+      const cores = navigator.hardwareConcurrency || "?";
+      const mem   = navigator.deviceMemory
+        ? navigator.deviceMemory + "GB"
+        : "??GB";
+      const res   = `${screen.width}x${screen.height}`;
+      const tz    = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const ua    = navigator.userAgent;
+      const os    =
+        /Linux/.test(ua) ? "Linux"  :
+        /Mac/.test(ua)   ? "Darwin" :
+        /Win/.test(ua)   ? "WinNT"  : "?";
+      const ip    =
+        "192.168." +
+        (Math.floor(Math.random() * 253) + 1) + "." +
+        (Math.floor(Math.random() * 253) + 1);
+      const rules = Math.floor(Math.random() * 700) + 200;
+
+      const rows = [
+        {
+          type: RowType.BANNER,
+          text: "UNIFIED BOOT SYSTEM v2.4.1",
+          cls: "y",
+          speed: 22,
+        },
+        {
+          type: RowType.BANNER,
+          text: "═════════════════════════════════════════════════════════════════════════",
+          cls: "d",
+          speed: 5,
+          variance: 1,
+        },
+        { type: RowType.GAP },
+        {
+          type: RowType.ROW,
+          section: "BIOS",
+          text: `POST ok — ${cores}-core / ${mem} / ${res}`,
+        },
+        {
+          type: RowType.ROW,
+          section: "BIOS",
+          text: "storage: /dev/clodmachine0 512GB NVMe",
+        },
+        {
+          type: RowType.PROGRESS,
+          section: "KERN",
+          text: "vmlinuz",
+          stepMs: 22,
+        },
+        {
+          type: RowType.ROW,
+          section: "KERN",
+          text: "seccomp filters loaded",
+        },
+        {
+          type: RowType.ROW,
+          section: "KERN",
+          text: "/dev/encrypted volume mounted",
+        },
+        {
+          type: RowType.ROW,
+          section: "KERN",
+          text: "entropy pool seeded",
+          status: "OK",
+        },
+        { type: RowType.GAP },
+        {
+          type: RowType.ROW,
+          section: "NET",
+          text: "eth0 up @ 10Gbps",
+          value: `ip: ${ip}`,
+        },
+        {
+          type: RowType.ROW,
+          section: "NET",
+          text: `fw: ${rules} rules`,
+          value: "IDS: active",
+        },
+        { type: RowType.GAP },
+        {
+          type: RowType.PROGRESS,
+          section: "SYS",
+          text: "filesystems",
+          stepMs: 26,
+        },
+        {
+          type: RowType.ROW,
+          section: "SYS",
+          text: `tz: ${tz}`,
+          value: `os: ${os}`,
+        },
+        {
+          type: RowType.ROW,
+          section: "SYS",
+          text: "logging daemon started",
+          status: "OK",
+        },
+        { type: RowType.GAP },
+        {
+          type: RowType.ROW,
+          section: "NET",
+          text: "inbound connection",
+          value: ip,
+          cls: "y",
+          speed: 16,
+          variance: 12,
+        },
+        {
+          type: RowType.ROW,
+          section: "AUTH",
+          text: "identity unknown",
+          value: "ESCALATING",
+          cls: "y",
+          speed: 17,
+          variance: 14,
+        },
+        { type: RowType.GAP },
+      ];
+
+      for (const row of rows) await renderItem(row);
+
+      authEl.style.display = "block";
+      nudgeSpacer();
+      renderChars();
+      hid.focus();
+      booted = true;
+    }
+
+
+    function renderChars() {
+      chars.innerHTML = '';
+      for (let i = 0; i < val.length; i++) {
+        const s = document.createElement('span');
+        s.className = 'ch filled';
+        chars.appendChild(s);
+      }
+      const c = document.createElement('span');
+      c.className = 'ch active';
+      chars.appendChild(c);
+    }
+
+    hid.addEventListener('input', () => {
+      if (!booted) return;
+      val = hid.value;
+      renderChars();
+    });
+
+    hid.addEventListener('keydown', async e => {
+      if (!booted || e.key !== 'Enter') return;
+      if (val === PASS) {
+        grantBeep();
+        msg.className = 'log-line g';
+        msg.textContent = '[ AUTH ] credentials verified — access granted.';
+        val = ''; hid.value = ''; renderChars();
+        await sleep(650);
+        msg.textContent = '[ SYS  ] opening session...';
+        await sleep(550);
+        window.location.href = REDIRECT;
+      } else {
+        denyBeep();
+        msg.className = 'log-line r';
+        msg.textContent = '[ AUTH ] credentials invalid  — access denied.';
+          + (Math.floor(Math.random() * 2) + 1) + ' attempt(s) logged.';
+        val = ''; hid.value = ''; renderChars();
+        await sleep(2100);
+        msg.textContent = '';
+        msg.className = 'log-line';
+      }
+    });
+
+    nudgeSpacer();
+  </script>
+</body>
+</html>
