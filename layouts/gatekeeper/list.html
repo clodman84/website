@@ -175,7 +175,7 @@
     const PASS     = 'kuhoo';
     const params = new URLSearchParams(window.location.search);
     const REDIRECT = params.get('redirect') || '{{ .Site.BaseURL }}kuhoo/gpu_renderer/';
-    const BAR_W    = 16; /* progress bar fill width in block chars */
+    const BAR_W    = 8; /* progress bar fill width in block chars */
 
     /* ── STATE ───────────────────────────────────────────────── */
     let val = '', booted = false, started = false;
@@ -359,7 +359,7 @@
       const p = addLine("d");
       const label =
         `[ ${section.padEnd(COLS.section)} ] ` +
-        text.padEnd(18);
+        text.padEnd(28);
 
       for (let i = 0; i <= BAR_W; i++) {
         const filled = "█".repeat(i);
@@ -372,7 +372,7 @@
           `<span class="d">]</span> ` +
           `<span class="d">${pct}%</span>`;
         nudgeSpacer();
-        if (i < BAR_W) await sleep(stepMs + Math.random() * 18);
+        if (i < BAR_W) await sleep(stepMs + Math.random() * 50);
       }
 
       p.innerHTML =
@@ -450,7 +450,6 @@
           speed: 5,
           variance: 1,
         },
-        { type: RowType.GAP },
         {
           type: RowType.ROW,
           section: "BIOS",
@@ -460,12 +459,6 @@
           type: RowType.ROW,
           section: "BIOS",
           text: "storage: /dev/clodmachine0 512GB NVMe",
-        },
-        {
-          type: RowType.PROGRESS,
-          section: "KERN",
-          text: "vmlinuz",
-          stepMs: 22,
         },
         {
           type: RowType.ROW,
@@ -483,7 +476,6 @@
           text: "entropy pool seeded",
           status: "OK",
         },
-        { type: RowType.GAP },
         {
           type: RowType.ROW,
           section: "NET",
@@ -496,18 +488,11 @@
           text: `fw: ${rules} rules`,
           value: "IDS: active",
         },
-        { type: RowType.GAP },
-        {
-          type: RowType.PROGRESS,
-          section: "SYS",
-          text: "filesystems",
-          stepMs: 26,
-        },
         {
           type: RowType.ROW,
           section: "SYS",
           text: `tz: ${tz}`,
-          value: `os: ${os}`,
+          value: `OS: ${os}`,
         },
         {
           type: RowType.ROW,
@@ -515,6 +500,19 @@
           text: "logging daemon started",
           status: "OK",
         },
+        {
+          type: RowType.PROGRESS,
+          section: "SYS",
+          text: "charging supercapacitor",
+          stepMs: 80,
+        },
+        {
+          type: RowType.PROGRESS,
+          section: "SYS",
+          text: "scrambling filesystems",
+          stepMs: 80,
+        },
+        { type: RowType.GAP },
         { type: RowType.GAP },
         {
           type: RowType.ROW,
