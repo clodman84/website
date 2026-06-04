@@ -174,8 +174,9 @@
   <script>
     /* ── CONFIG ──────────────────────────────────────────────── */
     const PASS     = 'kuhoo';
-    const REDIRECT = '{{ .Site.BaseURL }}kuhoo/gpu_renderer/';
-    const BAR_W    = 23; /* progress bar fill width in block chars */
+    const params = new URLSearchParams(window.location.search);
+    const REDIRECT = params.get('redirect') || '{{ .Site.BaseURL }}kuhoo/gpu_renderer/';
+    const BAR_W    = 16; /* progress bar fill width in block chars */
 
     /* ── STATE ───────────────────────────────────────────────── */
     let val = '', booted = false, started = false;
@@ -329,8 +330,8 @@
     /* ── ROW SYSTEM ──────────────────────────────────────────── */
     const COLS = {
       section: 4,
-      text: 44,
-      value: 20,
+      text: 28,
+      value: 12,
     };
 
     const RowType = {
@@ -442,8 +443,8 @@
         },
         {
           type: RowType.BANNER,
-          text: "═════════════════════════════════════════════════════════════════════════",
-          cls: "d",
+          text: "══════════════════════════",
+          cls: "y",
           speed: 5,
           variance: 1,
         },
