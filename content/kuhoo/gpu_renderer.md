@@ -37,15 +37,16 @@ I could find no sling large enough no shoot it down, no purpose brobdingnagian e
 
 > *He said to the woman, “Did God really say, ‘You must not eat from any tree in the garden’?" -- Genesis 3:1*
 
-I soon realised that I would have to resort to using deeper magic to tackle the leviathan. The first of my endeavors was a clone of the Dinosaur Game from Google Chrome. Soon the dinosaur had learnt to jump, dash, double jump and ground slam. But I remained dissatisfied. Thus, began my expedition through the hallowed caves of the internet in search for a suitable spell. Soon, I stumbled across a recreation of the snake game on the SDL3 examples and tutorial page. 
+Soon I realised that I would have to resort to using deeper magic to tackle the leviathan. The first of my endeavors was a clone of the Dinosaur Game from Google Chrome. I taught the dinosaur to jump, dash, double jump and ground slam. But I remained dissatisfied. Thus began my pilgrimage through the hallowed caves of the internet in search for a suitable spell. My expedition ended in temptation — a snake coiled on a documentation page.
 
 <iframe 
   src="/demos/snake/snake.html" 
   width="100%" 
   height="500px" 
   frameborder="0"
-  scrolling="no"
   style="display:block;border:none;padding:0;margin:0;">
 </iframe>
+
+> "Give a man a fish, feed him for a day. Don't teach a man to fish, and feed yourself. He's a grown man, and fishing's not that hard." - Ron Swanson
 
 For the uninitiated SDL or Simple DirectMedia Layer is a cross-platform development library designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL/Direct3D/Metal/Vulkan. It is used by video playback software, emulators, popular games…… and my app. It's honestly surprising that it took this long for me to shoehorn a game into my very serious, totally necessary and 100% thought out photo tagging and editing application. You see SDL is a middleman, , it acts as a compatibility layer between my application and all the different environments my app runs on. SDL3 also introduced a GPU API, which does the busywork of catering to the idiosyncrasies of differing hardware and platforms for me.
