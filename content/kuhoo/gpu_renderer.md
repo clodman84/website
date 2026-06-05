@@ -17,7 +17,9 @@ color = "orange" #color from the theme settings
 > *This tale grew in the telling, until it became a history of the Great War of the Ring and included many glimpses of the yet more ancient history that preceded it.*
 > *-- J. R. R. Tolkein*
 
-To make something wholly your own is to hunt down every spectre of what it could become; there is always 'one more thing'. Those who are masters of their craft know when to put the hammer down, sit back, and admire their handywork. Not me though… Now where did I leave my spanner?
+To make something wholly your own is to hunt down every spectre of what it could become; there is always 'one more thing'. Those who are masters of their craft know when to put the hammer down, sit back, and admire their handywork. 
+
+Not me though… Now where did I leave my spanner?
 
 {{< figure src="/images/howl.webp" position="center" style="border-radius: 8px; width: 75%; display: block; margin: auto;" >}}
 
@@ -35,7 +37,7 @@ I could find no sling large enough no shoot it down, no purpose brobdingnagian e
 
 > *He said to the woman, “Did God really say, ‘You must not eat from any tree in the garden’?" -- Genesis 3:1*
 
-I soon realised that I would have to resort to using deeper magic to tackle the leviathan. My first such attempt was a clone of the Dinosaur Game from Google Chrome. Soon the dinosaur had learnt to jump, dash, double jump and ground slam. But I remained dissatisfied, and I wandered across the hallowed walls of the internet in search for a suitable spell. It was while I was on one such excursion, that I stumbled across a recreation of the snake game on the SDL3 examples and tutorial page. 
+I soon realised that I would have to resort to using deeper magic to tackle the leviathan. The first of my endeavors was a clone of the Dinosaur Game from Google Chrome. Soon the dinosaur had learnt to jump, dash, double jump and ground slam. But I remained dissatisfied. Thus, began my expedition through the hallowed caves of the internet in search for a suitable spell. Soon, I stumbled across a recreation of the snake game on the SDL3 examples and tutorial page. 
 
 <iframe 
   src="/demos/snake/snake.html" 
