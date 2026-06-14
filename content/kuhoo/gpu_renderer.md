@@ -59,7 +59,7 @@ My expedition ended in temptation -- a snake coiled on a documentation page.
 
 On the SDL3 documentation page, I found examples of 3D games, and their accompanying code. Up until this point, I had always touched graphics APIs with a really wombly stick, but now it seemed almost pleasant.
 
-For the uninitiated SDL or Simple DirectMedia Layer is a cross-platform development library designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL/Direct3D/Metal/Vulkan. Or to put it simply, SDL3 is a middleman, that shelters the developer from the idiosyncrasies of each platform they are targeting. It is used by video playback software, emulators, popular games, and my app.
+For the uninitiated SDL or Simple DirectMedia Layer is a cross-platform development library designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL/Direct3D/Metal/Vulkan. Or to put it simply, SDL3 is a middleman that shelters the developer from the idiosyncrasies of each platform they are targeting. It is used by video playback software, emulators, popular games, and my app.
 
 It's honestly surprising that it took this long for me to shoehorn a game into my very serious, totally necessary and 100% thought out photo tagging and editing application. SDL3 (the latest version) also introduced a GPU API, which I was already using it to stream and resize enormous image textures on the fly. It was perfect for my new use case. The use case being a fully 3D video game, embedded inside my photography tagging application.
 
