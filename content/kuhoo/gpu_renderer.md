@@ -29,7 +29,7 @@ Now where did I leave my spanner?
 
 
 > *"Far, far below the deepest delvings of the Dwarves, the world is gnawed by nameless things."*
-> *-- Gandalf The White in The Two Towers*
+> *--- Gandalf The White in The Two Towers*
 
 I maintain an [application](https://github.com/clodman84/Updated-Newer-Fresher-Version-3) to help identify, print and distribute over 20,000 photographs annually. Over three years and two rewrites, the app has morphed into a patchwork Goliath of superfluous features. Every new need, an addition to a house that was never meant to have stairs. 
 
@@ -39,13 +39,13 @@ While I was hammering away in the basement of my pet titan, mounting the railing
 
 I could find no sling large enough no shoot it down, no purpose brobdingnagian enough to feed its insatiable apatite. No table, no loading indicator, no preview could encircle this beast, some part of it always stayed empty. 
 
-> *He said to the woman, “Did God really say, ‘You must not eat from any tree in the garden’?" -- Genesis 3:1*
+> *He said to the woman, “Did God really say, ‘You must not eat from any tree in the garden’?" --- Genesis 3:1*
 
 Soon I realised that I would have to resort to using deeper magic to tackle the leviathan. The first of my endeavors was a clone of the Dinosaur Game from Google Chrome. I taught the dinosaur to jump, dash, double jump and ground slam; but it wasn't enough. 
 
 Thus began my pilgrimage through the hallowed caves of the internet in search for a suitable spell. 
 
-My expedition ended in temptation -- a snake coiled on a documentation page.
+My expedition ended in temptation --- a snake coiled on a documentation page.
 
 <iframe 
   src="/demos/snake/snake.html" 
@@ -55,7 +55,7 @@ My expedition ended in temptation -- a snake coiled on a documentation page.
   style="display:block;border:none;padding:0;margin:0;">
 </iframe>
 
-> "Give a man a fish, feed him for a day. Don't teach a man to fish, and feed yourself. He's a grown man, and fishing's not that hard." - Ron Swanson
+> "Give a man a fish, feed him for a day. Don't teach a man to fish, and feed yourself. He's a grown man, and fishing's not that hard." --- Ron Swanson
 
 On the SDL3 documentation page, I found examples of 3D games, and their accompanying code. Up until this point, I had always touched graphics APIs with a really wombly stick, but now it seemed almost pleasant.
 
