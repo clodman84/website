@@ -3,7 +3,7 @@ title = "What comes after triangles?"
 date = "2026-06-03T14:02:56+05:30"
 author = "clodman84"
 authorTwitter = "" #do not include @
-cover = ""
+cover = "images/3.png"
 coverCaption = ""
 tags = ["Computer Graphics", "Programming", "Hardware Renderer"]
 keywords = ["", ""]
@@ -65,7 +65,16 @@ It's honestly surprising that it took this long for me to shoehorn a game into m
 
 In this series of blogposts, I am going to document the progress of developing the game, while paying attention to the uncharted parts of the ocean of computer graphics resources.
 
-<div style="text-align: center;">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/WKqJCle_GzE?si=5CJLtpk_hQCpF9Oa" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<div style="max-width: 700px; margin: 0 auto;">
+  <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+    <iframe
+      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+      src="https://www.youtube.com/embed/WKqJCle_GzE?si=5CJLtpk_hQCpF9Oa"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen
+    ></iframe>
+  </div>
 </div>
-
