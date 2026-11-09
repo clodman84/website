@@ -11,4 +11,5 @@ description = ""
 showFullContent = false
 readingTime = true 
 color = "green" #color from the theme settings
+draft = true
 +++
